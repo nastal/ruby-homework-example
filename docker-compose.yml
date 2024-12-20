@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    volumes:
+      - db-data:/var/lib/postgresql/data
+  web:
+    build: .
+    command: bundle exec rails s -p 3300 -b '0.0.0.0'
+    volumes:
+      - .:/app
+    ports:
+      - 3300:3300
+    depends_on:
+      - db
+      - nominatim
+
+  nominatim:
+    image: mediagis/nominatim:4.5
+    container_name: nominatim
+    environment:
+      - PBF_URL=https://download.geofabrik.de/europe/latvia-latest.osm.pbf
+      - REPLICATION_URL=https://download.geofabrik.de/europe/latvia-updates/
+      - IMPORT_STYLE=extratags
+      - IMPORT_WIKIPEDIA=false
+      - NOMINATIM_PASSWORD=nominatim_password
+    ports:
+      - 8080:8080
+    # The following are recommended settings for Nominatim
+    restart: unless-stopped
+    # Add volume for persistent data (optional but recommended)
+    volumes:
+      - nominatim-data:/var/lib/postgresql/16/main
+      - nominatim-config:/nominatim
+    shm_size: 1gb
+    # Add healthcheck (optional but recommended)
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8080/status.php || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  db-data:
+  nominatim-data:
+  nominatim-config:
