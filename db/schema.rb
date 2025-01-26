@@ -10,14 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 20_231_115_194_943) do
+ActiveRecord::Schema[7.1].define(version: 2025_01_26_151447) do
   # These are extensions that must be enabled in order to support this database
-  enable_extension 'plpgsql'
+  enable_extension "plpgsql"
 
-  create_table 'hotels', force: :cascade do |t|
-    t.string 'city'
-    t.text 'display_name'
-    t.datetime 'created_at', null: false
-    t.datetime 'updated_at', null: false
+  create_table "cities", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "coat_of_arms_url"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
+
+  create_table "hotels", force: :cascade do |t|
+    t.text "display_name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "city_id", null: false
+    t.index ["city_id"], name: "index_hotels_on_city_id"
+  end
+
+  add_foreign_key "hotels", "cities"
 end

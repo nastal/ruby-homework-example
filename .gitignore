@@ -35,4 +35,4 @@
 /data
 .DS_Store
 
-./.idea
+/.idea/*
