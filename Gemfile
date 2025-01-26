@@ -47,6 +47,10 @@ group :development do
   # gem "spring"
 end
 
+group :test do
+  gem 'webmock'
+end
+
 gem 'rubocop', '~> 1.71'
 
 gem "rack-mini-profiler", "~> 3.3", :group => :development

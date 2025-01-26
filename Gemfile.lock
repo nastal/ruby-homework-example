@@ -75,6 +75,8 @@ GEM
       minitest (>= 5.1)
       mutex_m
       tzinfo (~> 2.0)
+    addressable (2.8.7)
+      public_suffix (>= 2.0.2, < 7.0)
     ast (2.4.2)
     base64 (0.2.0)
     bigdecimal (3.1.4)
@@ -86,6 +88,9 @@ GEM
       uniform_notifier (~> 1.11)
     concurrent-ruby (1.2.2)
     connection_pool (2.4.1)
+    crack (1.0.0)
+      bigdecimal
+      rexml
     crass (1.0.6)
     date (3.3.4)
     debug (1.6.1)
@@ -97,6 +102,7 @@ GEM
     erubi (1.12.0)
     globalid (1.2.1)
       activesupport (>= 6.1)
+    hashdiff (1.1.2)
     i18n (1.14.1)
       concurrent-ruby (~> 1.0)
     io-console (0.5.11)
@@ -136,6 +142,7 @@ GEM
       ast (~> 2.4.1)
       racc
     pg (1.5.6)
+    public_suffix (6.0.1)
     puma (5.6.4)
       nio4r (~> 2.0)
     racc (1.7.3)
@@ -183,6 +190,7 @@ GEM
     regexp_parser (2.10.0)
     reline (0.3.1)
       io-console (~> 0.5)
+    rexml (3.4.0)
     rspec-core (3.11.0)
       rspec-support (~> 3.11.0)
     rspec-expectations (3.11.0)
@@ -222,6 +230,10 @@ GEM
       unicode-emoji (~> 4.0, >= 4.0.4)
     unicode-emoji (4.0.4)
     uniform_notifier (1.16.0)
+    webmock (3.24.0)
+      addressable (>= 2.8.0)
+      crack (>= 0.3.2)
+      hashdiff (>= 0.4.0, < 2.0.0)
     webrick (1.8.1)
     websocket-driver (0.7.6)
       websocket-extensions (>= 0.1.0)
@@ -242,6 +254,7 @@ DEPENDENCIES
   rspec-rails (~> 5.1.2)
   rubocop (~> 1.71)
   tzinfo-data
+  webmock
 
 RUBY VERSION
    ruby 3.3.0p0
