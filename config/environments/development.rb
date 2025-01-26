@@ -67,4 +67,15 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions
   config.action_controller.raise_on_missing_callback_actions = true
+
+  config.after_initialize do
+    Bullet.enable = true
+    Bullet.alert = true
+    Bullet.bullet_logger = true
+    Bullet.console = true
+    Bullet.skip_html_injection = false
+  end
 end
+
+Rack::MiniProfiler.config.position = 'bottom-right'
+Rack::MiniProfiler.config.start_hidden = false
