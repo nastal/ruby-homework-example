@@ -19,6 +19,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_26_151447) do
     t.string "coat_of_arms_url"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["name"], name: "index_cities_on_name", unique: true
   end
 
   create_table "hotels", force: :cascade do |t|
@@ -26,6 +27,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_26_151447) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "city_id", null: false
+    t.index ["city_id", "display_name"], name: "index_hotels_on_city_id_and_display_name", unique: true
     t.index ["city_id"], name: "index_hotels_on_city_id"
   end
 
