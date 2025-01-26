@@ -2,18 +2,17 @@ require 'uri'
 require 'net/http'
 
 class SearchController < ApplicationController
-
   def index
     warmup
 
     q = params[:q] || ''
 
-    search_result = Hotel.all.select{ |i| i.display_name.include? q }
+    search_result = Hotel.all.select { |i| i.display_name.include? q }
 
     with_city = search_result.map do |hotel|
       {
         **hotel.attributes,
-        city: { name: hotel['city'] },
+        city: { name: hotel['city'] }
       }
     end
 
@@ -23,17 +22,17 @@ class SearchController < ApplicationController
   def warmup
     # Fetch hotels and search inside name
 
-    cities_and_towns = [
-      "Daugavpils",
-      "Jelgava",
-      "Jurmala",
-      "Liepaja",
-      "Rezekne",
-      "Riga",
-      "Ventspils",
-      "Sigulda",
-      "Cesis",
-      "Kuldiga",
+    cities_and_towns = %w[
+      Daugavpils
+      Jelgava
+      Jurmala
+      Liepaja
+      Rezekne
+      Riga
+      Ventspils
+      Sigulda
+      Cesis
+      Kuldiga
     ]
 
     Hotel.destroy_all
@@ -45,9 +44,8 @@ class SearchController < ApplicationController
       @results = res.is_a?(Net::HTTPSuccess) ? JSON.parse(res.body) : []
 
       @results.each do |result|
-        Hotel.create( city: city, display_name: result["display_name"])
+        Hotel.create(city: city, display_name: result['display_name'])
       end
     end
   end
-
 end

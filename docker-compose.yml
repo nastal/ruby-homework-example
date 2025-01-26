@@ -8,6 +8,8 @@ services:
       POSTGRES_PASSWORD: password
     volumes:
       - db-data:/var/lib/postgresql/data
+    ports:
+      - '7006:5432'
   web:
     build: .
     command: bundle exec rails s -p 3300 -b '0.0.0.0'
