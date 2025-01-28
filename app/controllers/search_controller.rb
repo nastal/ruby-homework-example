@@ -16,13 +16,9 @@ class SearchController < ApplicationController
   def search_hotels(city_name, query)
     scope = Hotel.includes(:city)
 
-    if city_name.present?
-      scope = scope.joins(:city).where(cities: { name: city_name })
-    end
+    scope = scope.joins(:city).where(cities: { name: city_name }) if city_name.present?
 
-    if query.present?
-      scope = scope.where('hotels.display_name ILIKE ?', "%#{query}%")
-    end
+    scope = scope.where('hotels.display_name ILIKE ?', "%#{query}%") if query.present?
 
     scope.map do |hotel|
       {

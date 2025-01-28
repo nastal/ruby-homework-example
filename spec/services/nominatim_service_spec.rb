@@ -6,14 +6,14 @@ RSpec.describe NominatimService do
     let(:valid_response) do
       [
         {
-          "place_id" => 679044,
-          "name" => "Justus",
-          "display_name" => "Justus, 24, Jauniela, Старый город, Latgales apkaime, Рига, LV-1050, Латвия"
+          'place_id' => 679_044,
+          'name' => 'Justus',
+          'display_name' => 'Justus, 24, Jauniela, Старый город, Latgales apkaime, Рига, LV-1050, Латвия'
         },
         {
-          "place_id" => 678726,
-          "name" => "Garden Palace",
-          "display_name" => "Garden Palace, 28, ул. Грециниеку, Старый город, Latgales apkaime, Рига, LV-1050, Латвия"
+          'place_id' => 678_726,
+          'name' => 'Garden Palace',
+          'display_name' => 'Garden Palace, 28, ул. Грециниеку, Старый город, Latgales apkaime, Рига, LV-1050, Латвия'
         }
       ]
     end
@@ -65,6 +65,5 @@ RSpec.describe NominatimService do
         )
       end
     end
-
   end
 end

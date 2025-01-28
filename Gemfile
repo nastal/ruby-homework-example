@@ -53,6 +53,6 @@ end
 
 gem 'rubocop', '~> 1.71'
 
-gem "rack-mini-profiler", "~> 3.3", :group => :development
+gem 'rack-mini-profiler', '~> 3.3', group: :development
 
-gem "bullet", "~> 8.0", :group => :development
+gem 'bullet', '~> 8.0', group: :development

@@ -1,7 +1,7 @@
 class NominatimService
   BASE_URL = ENV.fetch('NOMINATIM_API_URL', 'http://nominatim:8080')
-  HOTELS_QUERY = '/search?q=Hotels%20in%20'
-  FORMAT_PARAM = '&format=json'
+  HOTELS_QUERY = '/search?q=Hotels%20in%20'.freeze
+  FORMAT_PARAM = '&format=json'.freeze
 
   def self.search_hotels_in_city(city_name)
     encoded_city_name = URI.encode_www_form_component(city_name)
