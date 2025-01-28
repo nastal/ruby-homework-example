@@ -3,9 +3,6 @@ class WarmupHotelsJob < ApplicationJob
 
   def perform
     City.find_each do |city|
-      # Heat cache before process so API remain hydrated
-      cache_key = "hotels_in_#{city.name.downcase}"
-      Rails.cache.write(cache_key, city.hotels.to_a, expires_in: 10.minutes)
 
       ActiveRecord::Base.transaction do
 
@@ -23,7 +20,6 @@ class WarmupHotelsJob < ApplicationJob
         })
       end
 
-      Rails.cache.delete(cache_key)
     end
   rescue => e
     Rails.logger.error("WarmupHotelsJob failed: #{e.message}")
