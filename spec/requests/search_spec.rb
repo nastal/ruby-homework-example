@@ -10,11 +10,11 @@ RSpec.describe '/search', type: :request do
       city_record = City.create!(name: city, coat_of_arms_url: 'http://example.com/sigulda.png')
 
       Hotel.create!([
-          { display_name: 'Hotel Pils', city: city_record },
-          { display_name: 'Kaķis', city: city_record },
-          { display_name: 'Sigulda', city: city_record },
-          { display_name: 'Kaķu māja', city: city_record }
-      ])
+                      { display_name: 'Hotel Pils', city: city_record },
+                      { display_name: 'Kaķis', city: city_record },
+                      { display_name: 'Sigulda', city: city_record },
+                      { display_name: 'Kaķu māja', city: city_record }
+                    ])
     end
 
     it 'returns result under 100ms' do
@@ -29,7 +29,8 @@ RSpec.describe '/search', type: :request do
 
     let(:expected_result) do
       [
-        { 'id' => anything, 'display_name' => 'Hotel Pils', 'city' => { 'name' => city, 'coat_of_arms_url' => 'http://example.com/sigulda.png' } },
+        { 'id' => anything, 'display_name' => 'Hotel Pils',
+          'city' => { 'name' => city, 'coat_of_arms_url' => 'http://example.com/sigulda.png' } }
       ]
     end
 

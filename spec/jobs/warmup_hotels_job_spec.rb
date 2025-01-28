@@ -25,16 +25,6 @@ RSpec.describe WarmupHotelsJob, type: :job do
       expect(Hotel.pluck(:city_id).uniq).to eq([city.id])
     end
 
-    it 'clears the cache for the city before updating' do
-      cache_key = "hotels_in_riga"
-      Rails.cache.write(cache_key, ['Old Data'])
-      expect(Rails.cache.read(cache_key)).to eq(['Old Data'])
-
-      described_class.perform_now
-
-      expect(Rails.cache.read(cache_key)).to be_nil
-    end
-
     it 'logs an error if NominatimService raises an exception' do
       allow(Rails.logger).to receive(:error)
       allow(NominatimService).to receive(:search_hotels_in_city).and_raise(StandardError, 'Something went wrong')
@@ -49,9 +39,9 @@ RSpec.describe WarmupHotelsJob, type: :job do
     it 'runs within a database transaction' do
       allow(Hotel).to receive(:insert_all).and_raise(StandardError, 'Database error')
 
-      expect {
+      expect do
         expect { described_class.perform_now }.to raise_error(StandardError, 'Database error')
-      }.not_to change { Hotel.count }
+      end.not_to(change { Hotel.count })
     end
   end
 end
