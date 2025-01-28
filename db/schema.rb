@@ -29,6 +29,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_01_26_151447) do
     t.bigint "city_id", null: false
     t.index ["city_id", "display_name"], name: "index_hotels_on_city_id_and_display_name", unique: true
     t.index ["city_id"], name: "index_hotels_on_city_id"
+    t.index ["display_name"], name: "index_hotels_on_display_name"
   end
 
   add_foreign_key "hotels", "cities"

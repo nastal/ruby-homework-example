@@ -1,51 +1,38 @@
-require 'uri'
-require 'net/http'
-
 class SearchController < ApplicationController
   def index
-    warmup
+    city_name = params[:city].to_s.capitalize
+    query = params[:q].to_s
 
-    q = params[:q] || ''
-
-    search_result = Hotel.all.select { |i| i.display_name.include? q }
-
-    with_city = search_result.map do |hotel|
-      {
-        **hotel.attributes,
-        city: { name: hotel['city'] }
-      }
+    cache_key = "search_results/#{city_name}/#{query}"
+    hotels = Rails.cache.fetch(cache_key, expires_in: 1.day) do
+      search_hotels(city_name, query)
     end
 
-    render json: with_city
+    render json: hotels
   end
 
-  def warmup
-    # Fetch hotels and search inside name
+  private
 
-    cities_and_towns = %w[
-      Daugavpils
-      Jelgava
-      Jurmala
-      Liepaja
-      Rezekne
-      Riga
-      Ventspils
-      Sigulda
-      Cesis
-      Kuldiga
-    ]
+  def search_hotels(city_name, query)
+    scope = Hotel.includes(:city)
 
-    Hotel.destroy_all
+    if city_name.present?
+      scope = scope.joins(:city).where(cities: { name: city_name })
+    end
 
-    cities_and_towns.each do |city|
-      uri = URI("http://nominatim:8080/search?q=Hotels%20in%20#{city}&format=json")
-      res = Net::HTTP.get_response(uri)
+    if query.present?
+      scope = scope.where('hotels.display_name ILIKE ?', "%#{query}%")
+    end
 
-      @results = res.is_a?(Net::HTTPSuccess) ? JSON.parse(res.body) : []
-
-      @results.each do |result|
-        Hotel.create(city: city, display_name: result['display_name'])
-      end
+    scope.map do |hotel|
+      {
+        id: hotel.id,
+        display_name: hotel.display_name,
+        city: {
+          name: hotel.city.name,
+          coat_of_arms_url: hotel.city.coat_of_arms_url
+        }
+      }
     end
   end
 end

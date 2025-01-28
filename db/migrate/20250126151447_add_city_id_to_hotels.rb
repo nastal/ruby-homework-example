@@ -4,5 +4,6 @@ class AddCityIdToHotels < ActiveRecord::Migration[7.1]
     remove_column :hotels, :city, :string
 
     add_index :hotels, [:city_id, :display_name], unique: true
+    add_index :hotels, :display_name
   end
 end
