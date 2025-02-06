@@ -4,13 +4,25 @@ RSpec.describe WarmupHotelsJob, type: :job do
   let!(:city) { City.create(name: 'Riga') }
   let(:hotels_data) do
     [
-      { 'display_name' => 'Hotel One' },
-      { 'display_name' => 'Hotel Two' }
+      { 'display_name' => 'Hotel One', 'place_id' => 1 },
+      { 'display_name' => 'Hotel Two', 'place_id' => 2 },
+      { 'display_name' => 'Hotel Three', 'place_id' => 3 },
+      { 'display_name' => 'Hotel Four', 'place_id' => 4 },
+      { 'display_name' => 'Hotel Five', 'place_id' => 5 },
+    ]
+  end
+
+  let(:hotels_new_data) do
+    [
+      { 'display_name' => 'Hotel One', 'place_id' => 1 },
+      { 'display_name' => 'Hotel Four', 'place_id' => 4 },
+      { 'display_name' => 'Hotel Five', 'place_id' => 5 },
     ]
   end
 
   before do
-    allow(NominatimService).to receive(:search_hotels_in_city).and_return(hotels_data)
+    city.hotels.insert_all(hotels_data)
+    allow(NominatimService).to receive(:search_hotels_in_city).and_return(hotels_new_data)
   end
 
   describe '#perform' do
@@ -20,8 +32,8 @@ RSpec.describe WarmupHotelsJob, type: :job do
     end
 
     it 'creates new hotels for the city' do
-      expect { described_class.perform_now }.to change { Hotel.count }.from(0).to(2)
-      expect(Hotel.pluck(:display_name)).to match_array(['Hotel One', 'Hotel Two'])
+      expect { described_class.perform_now }.to change { Hotel.count }.from(5).to(3)
+      expect(Hotel.pluck(:display_name)).to match_array(['Hotel One', 'Hotel Four', 'Hotel Five'])
       expect(Hotel.pluck(:city_id).uniq).to eq([city.id])
     end
 
@@ -37,7 +49,7 @@ RSpec.describe WarmupHotelsJob, type: :job do
     end
 
     it 'runs within a database transaction' do
-      allow(Hotel).to receive(:insert_all).and_raise(StandardError, 'Database error')
+      allow(Hotel).to receive(:upsert_all).and_raise(StandardError, 'Database error')
 
       expect do
         expect { described_class.perform_now }.to raise_error(StandardError, 'Database error')
