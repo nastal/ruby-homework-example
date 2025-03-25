@@ -1,4 +1,4 @@
-## Levelpath backend take-home task
+## Backend take-home task
 
 ### Task
 Analyze and improve this application based on the requirements below.
